@@ -1,15 +1,21 @@
-from rest_framework import serializers
-from rest_framework.relations import StringRelatedField
+from rest_framework.serializers import ModelSerializer, HyperlinkedModelSerializer, HyperlinkedRelatedField
 
-from .models import User
+from .models import User, Message
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    messages = StringRelatedField(many=True)
+class MessageSerializer(ModelSerializer):
+    class Meta:
+        model = Message
+        fields = ('subject', 'sent_to', 'content')
+
+
+class UserSerializer(HyperlinkedModelSerializer):
+    messages = MessageSerializer(many=True)
+    url = HyperlinkedRelatedField(view_name='UserViewSet', read_only=True)
 
     class Meta:
         model = User
-        fields = ('url', 'email', 'first_name', 'last_name', 'password')
+        fields = ('url', 'email', 'first_name', 'last_name', 'password', 'messages')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -17,6 +23,10 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         user = User(**validated_data)
         # Hash passwords
         user.set_password(password)
+        msg_data = validated_data.pop('messages')
+        User.objects.create(**validated_data)
+        for msg_data in msg_data:
+            Message.objects.create(user=user, **msg_data)
         user.save()
         return user
 

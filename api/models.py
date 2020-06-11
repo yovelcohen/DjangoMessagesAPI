@@ -13,8 +13,10 @@ def validate_message_content(content):
 
 
 class Message(models.Model):
+    sender = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
     sent_to = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                on_delete=models.DO_NOTHING)
+                                on_delete=models.DO_NOTHING,
+                                related_name='sent_to')
     sent_at = models.DateTimeField(default=timezone.now)
 
     subject = models.CharField(max_length=120,
@@ -37,7 +39,8 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
     messages = models.ForeignKey(related_name='messages',
                                  on_delete=models.CASCADE,
-                                 to=Message
+                                 to=Message,
+                                 null=True
                                  )
 
     def __str__(self):

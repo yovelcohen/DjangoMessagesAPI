@@ -1,7 +1,8 @@
 import os
 
 import django_heroku
-import psycopg2
+
+from .Settings.Consts import POSTGRESQL_CONNECTION
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -24,10 +25,19 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'django.contrib.sites',
     'rest_auth',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.twitter',
     'api',
     'drf_yasg'
 ]
+SITE_ID = 1
+
 AUTH_USER_MODEL = 'api.User'
 
 MIDDLEWARE = [
@@ -60,19 +70,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'messagesapi.wsgi.application'
 
-DATABASE_URL = os.environ['DATABASE_URL']
-
-conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': POSTGRESQL_CONNECTION['engine'],
+        'NAME': POSTGRESQL_CONNECTION['database'],
+        'user': POSTGRESQL_CONNECTION['user'],
+        'PASSWORD': POSTGRESQL_CONNECTION['password'],
+        'HOST': POSTGRESQL_CONNECTION["host"],
     }
 }
-import dj_database_url
-
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
