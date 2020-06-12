@@ -1,13 +1,14 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 from rest_framework.viewsets import ModelViewSet
 
 from .Serializers.message_serializer import MessageSerializer
-from .Utils.Consts import MessageFields
+from .Utils.Consts import MessageFields, FILTERS
 from .models import Message
 
 
@@ -19,8 +20,11 @@ class MessagesViewSet(ModelViewSet):
     authentication_classes = [TokenAuthentication, ]
     permission_classes = [IsAuthenticated]
     serializer_class = MessageSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = [MessageFields.MARK_READ, MessageFields.SENDER]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = FILTERS.FILTER_SET
+    search_fields = FILTERS.SEARCH_FIELDS
+    ordering_fields = FILTERS.ORDERING_FIELDS
+    ordering = [MessageFields.DATE, ]
 
     def get_user(self):
         user = self.request.user
