@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django.contrib.sites',
     'rest_auth',
+    'django_filters',
     'allauth',
     'allauth.account',
     'rest_auth.registration',
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'drf_yasg'
 ]
 SITE_ID = 1
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 AUTH_USER_MODEL = 'api.User'
 
@@ -48,6 +50,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_currentuser.middleware.ThreadLocalUserMiddleware',
+
 ]
 
 ROOT_URLCONF = 'messagesapi.urls'

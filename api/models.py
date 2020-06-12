@@ -2,21 +2,18 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
-from rest_framework.exceptions import ValidationError
+from django_currentuser.db.models import CurrentUserField
 
-
-def validate_message_content(content):
-    if content is not None:
-        pass
-    elif content is None or content == "" or content.isspace():
-        raise ValidationError("Body of message can't be empty!")
+from .Utils.Consts import MessageFields, UserFields
+from .Utils.validators import validate_message_content
 
 
 class Message(models.Model):
-    sender = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
+    sender = CurrentUserField()
+
     sent_to = models.ForeignKey(settings.AUTH_USER_MODEL,
                                 on_delete=models.DO_NOTHING,
-                                related_name='sent_to')
+                                related_name=MessageFields.SENT_TO)
     sent_at = models.DateTimeField(default=timezone.now)
 
     subject = models.CharField(max_length=120,
@@ -24,28 +21,18 @@ class Message(models.Model):
 
     content = models.TextField(validators=[validate_message_content],
                                help_text="Message Body")
+    mark_read = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.subject} : \n {self.content} "
 
 
 class User(AbstractUser):
-    username = models.CharField(blank=True,
-                                null=True,
-                                max_length=120)
+    username = models.CharField(max_length=120)
     email = models.EmailField(unique=True)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
-    messages = models.ForeignKey(related_name='messages',
-                                 on_delete=models.CASCADE,
-                                 to=Message,
-                                 null=True
-                                 )
+    USERNAME_FIELD = UserFields.EMAIL
+    REQUIRED_FIELDS = [UserFields.USER_NAME, UserFields.FIRST_NAME, UserFields.LAST_NAME]
 
     def __str__(self):
         return f"{self.username}"
-
-    def read(self):
-        self.last_read_date = timezone.now()
-        self.save()
