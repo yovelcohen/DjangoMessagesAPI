@@ -20,8 +20,7 @@ class MessagesViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = MessageSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = [MessageFields.MARK_READ]
-    lookup_field = MessageFields.SENT_TO
+    filterset_fields = [MessageFields.MARK_READ, MessageFields.SENDER]
 
     def get_user(self):
         user = self.request.user
@@ -33,8 +32,17 @@ class MessagesViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(sender=self.get_user())
 
+    @action(detail=True, )
+    def unread_messages(self, request, pk):
+        """
+        Return all of the user's unread messages.
+        """
+        data = self.filter_queryset(self.get_queryset())
+        serialized_data = MessageSerializer(data, many=True)
+        return Response(serialized_data.data, status=HTTP_200_OK)
+
     @action(detail=True)
-    def sent_messages(self, request, sent_to):
+    def sent_messages(self, request, pk):
         """
         Return all messages sent by the user.
         """
@@ -43,7 +51,7 @@ class MessagesViewSet(ModelViewSet):
         return Response(serialized_data.data, status=HTTP_200_OK)
 
     @action(detail=True)
-    def last_50_messages(self, request):
+    def last_50_messages(self, request, pk):
         """
         Return the user's 50 last messages
         """
@@ -57,22 +65,4 @@ class MessagesViewSet(ModelViewSet):
         """
         data = self.get_queryset().order_by(f'-{MessageFields.ID}')[0]
         serialized_data = MessageSerializer(data, many=False)
-        return Response(serialized_data.data, status=HTTP_200_OK)
-
-    @action(detail=True)
-    def get_all_msg_from_user(self, request):
-        """
-        Return all messages from specific user.
-        """
-        queryset = Message.objects.filter(sender=self.get_user())
-        serialized_data = MessageSerializer(queryset, many=True)
-        return Response(serialized_data.data, status=HTTP_200_OK)
-
-    @action(detail=True, )
-    def unread_messages(self):
-        """
-        Return all of the user's unread messages.
-        """
-        data = self.filter_queryset(self.get_queryset())
-        serialized_data = MessageSerializer(data, many=True)
         return Response(serialized_data.data, status=HTTP_200_OK)
