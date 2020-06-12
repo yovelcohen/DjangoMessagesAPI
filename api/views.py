@@ -1,10 +1,13 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from .Serializers.message_serializer import MessageSerializer
 from .Serializers.user_serializer import UserSerializer
@@ -17,7 +20,8 @@ class MessagesViewSet(ModelViewSet):
     A simple ViewSet for viewing and editing the messages
     associated with the user.
     """
-    authentication_classes = [JSONWebTokenAuthentication, ]
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [IsAuthenticated]
     serializer_class = MessageSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = [MessageFields.MARK_READ]
@@ -57,11 +61,7 @@ class MessagesViewSet(ModelViewSet):
         return Response(serialized_data.data, status=HTTP_200_OK)
 
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-
-
-class UserCreate(APIView):
+class CreateUserView(APIView):
     """
     Creates the user.
     """
