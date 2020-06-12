@@ -69,7 +69,7 @@ class MessagesViewSet(ModelViewSet):
         return Response(serialized_data.data, status=HTTP_200_OK)
 
     @action(detail=True, )
-    def unread_messages(self, request):
+    def unread_messages(self):
         """
         Return all of the user's unread messages.
         """
