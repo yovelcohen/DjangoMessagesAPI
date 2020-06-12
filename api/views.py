@@ -21,6 +21,7 @@ class MessagesViewSet(ModelViewSet):
     serializer_class = MessageSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = [MessageFields.MARK_READ]
+    lookup_field = MessageFields.SENT_TO
 
     def get_user(self):
         user = self.request.user
@@ -30,7 +31,7 @@ class MessagesViewSet(ModelViewSet):
         return Message.objects.filter(sent_to=self.get_user())
 
     @action(detail=True)
-    def sent_messages(self):
+    def sent_messages(self, request, sent_to):
         """
         Return all messages sent by the user.
         """
@@ -39,19 +40,27 @@ class MessagesViewSet(ModelViewSet):
         return Response(serialized_data.data, status=HTTP_200_OK)
 
     @action(detail=True)
-    def last_50_messages(self, request, pk):
+    def last_50_messages(self, request, sent_to):
         """
         Return the user's 50 last messages
         """
-        queryset = Message.objects.filter(sent_to=self.get_user())
-        serialized_data = MessageSerializer(queryset, many=True)
+        serialized_data = MessageSerializer(self.get_queryset(), many=True)
         return Response(serialized_data.data, status=HTTP_200_OK)
 
-    @action(detail=True, )
-    def unread_messages(self, request, pk):
+    @action(detail=False)
+    def newest_msg(self, request, sent_to):
         """
-        Return all of the user's unread messages.
+        Return the latest message the user received.
         """
-        data = self.filter_queryset(self.get_queryset())
-        serialized_data = MessageSerializer(data, many=True)
+        data = self.get_queryset().order_by(f'-{MessageFields.ID}')[0]
+        serialized_data = MessageSerializer(data, many=False)
+        return Response(serialized_data.data, status=HTTP_200_OK)
+
+    @action(detail=True)
+    def get_all_msg_from_user(self, request, sender):
+        """
+        Return all messages from specific user.
+        """
+        queryset = Message.objects.filter(sender=self.get_user())
+        serialized_data = MessageSerializer(queryset, many=True)
         return Response(serialized_data.data, status=HTTP_200_OK)

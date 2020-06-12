@@ -17,6 +17,7 @@ class UserFields:
     USER_NAME = 'username'
     IS_STAFF = 'is_staff'
     IS_SUPERUSER = 'is_superuser'
+    ID = 'id'
 
 
 class SerializerFields:

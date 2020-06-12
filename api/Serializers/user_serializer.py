@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
+from ..Utils.Consts import UserFields
 from ..models import User
 
 
@@ -16,10 +17,10 @@ class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(min_length=8, write_only=True)
 
     def create(self, validated_data):
-        user = User.objects.create_user(validated_data['username'], validated_data['email'],
-                                        validated_data['password'])
+        user = User.objects.create_user(validated_data[UserFields.USER_NAME], validated_data[UserFields.EMAIL],
+                                        validated_data[UserFields.PASSWORD])
         return user
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password')
+        fields = (UserFields.ID, UserFields.USER_NAME, UserFields.EMAIL, UserFields.PASSWORD)

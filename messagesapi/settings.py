@@ -3,13 +3,13 @@ import os
 import django_heroku
 import dotenv
 
-from .Settings.Consts import STATIC, EN, UTC
+from .Settings.Consts import STATIC, EN, UTC, SECRET_KEY
 from .Settings.apps.apps import DjangoApps
 from .Settings.apps.installed_apps import INSTALLED_APPS
 from .Settings.apps.middleware import MIDDLEWARE
 from .Settings.auth.password_validators import AUTH_PASSWORD_VALIDATORS
 from .Settings.auth.rest_framework_auth import RestFrameworkAuth, \
-    REST_DEFAULT_PERMISSIONS_CLASSES, REST_DEFAULT_AUTHENTICATION_CLASSES, JWT_AUTH
+    REST_DEFAULT_PERMISSIONS_CLASSES, REST_DEFAULT_AUTHENTICATION_CLASSES
 from .Settings.database import POSTGRESQL_CONNECTION
 from .Settings.roots import AppRoots
 from .Settings.templates.templates_settings import TemplateSettings
@@ -20,7 +20,7 @@ dotenv_file = os.path.join(BASE_DIR, ".env")
 if os.path.isfile(dotenv_file):
     dotenv.load_dotenv(dotenv_file)
 
-SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = os.environ[SECRET_KEY]
 
 DEBUG = True
 
@@ -70,6 +70,5 @@ REST_FRAMEWORK = {
     RestFrameworkAuth.REST_DEFAULT_PERMISSIONS: REST_DEFAULT_PERMISSIONS_CLASSES,
     RestFrameworkAuth.REST_DEFAULT_AUTHENTICATION: REST_DEFAULT_AUTHENTICATION_CLASSES,
 }
-REST_USE_JWT = True
-JWT_AUTH = JWT_AUTH
+
 django_heroku.settings(locals())

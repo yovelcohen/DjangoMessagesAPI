@@ -9,6 +9,6 @@ class MessageSerializer(ModelSerializer):
 
     class Meta:
         model = Message
-        fields = (MessageFields.SENDER, MessageFields.SUBJECT,
+        fields = (MessageFields.ID, MessageFields.SENDER, MessageFields.SUBJECT,
                   MessageFields.SENT_TO, MessageFields.CONTENT, MessageFields.MARK_READ)
         read_only_fields = (MessageFields.DATE,)
