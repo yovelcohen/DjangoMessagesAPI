@@ -30,6 +30,9 @@ class MessagesViewSet(ModelViewSet):
     def get_queryset(self):
         return Message.objects.filter(sent_to=self.get_user())
 
+    def perform_create(self, serializer):
+        serializer.save(sender=self.get_user())
+
     @action(detail=True)
     def sent_messages(self, request, sent_to):
         """
@@ -48,7 +51,7 @@ class MessagesViewSet(ModelViewSet):
         return Response(serialized_data.data, status=HTTP_200_OK)
 
     @action(detail=False)
-    def newest_msg(self, request, sent_to):
+    def newest_msg(self, request):
         """
         Return the latest message the user received.
         """
