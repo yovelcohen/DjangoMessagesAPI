@@ -43,7 +43,7 @@ class MessagesViewSet(ModelViewSet):
         return Response(serialized_data.data, status=HTTP_200_OK)
 
     @action(detail=True)
-    def last_50_messages(self, request, sent_to):
+    def last_50_messages(self, request):
         """
         Return the user's 50 last messages
         """
@@ -60,10 +60,19 @@ class MessagesViewSet(ModelViewSet):
         return Response(serialized_data.data, status=HTTP_200_OK)
 
     @action(detail=True)
-    def get_all_msg_from_user(self, request, sender):
+    def get_all_msg_from_user(self, request):
         """
         Return all messages from specific user.
         """
         queryset = Message.objects.filter(sender=self.get_user())
         serialized_data = MessageSerializer(queryset, many=True)
+        return Response(serialized_data.data, status=HTTP_200_OK)
+
+    @action(detail=True, )
+    def unread_messages(self, request, pk):
+        """
+        Return all of the user's unread messages.
+        """
+        data = self.filter_queryset(self.get_queryset())
+        serialized_data = MessageSerializer(data, many=True)
         return Response(serialized_data.data, status=HTTP_200_OK)
