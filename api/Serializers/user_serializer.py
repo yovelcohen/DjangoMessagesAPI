@@ -1,32 +1,25 @@
-from api.models import User
-from rest_framework.relations import HyperlinkedRelatedField
-from rest_framework.serializers import HyperlinkedModelSerializer
+from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
-from api.Utils.Consts import UserFields, SerializerFields
+from ..models import User
 
 
-class UserSerializer(HyperlinkedModelSerializer):
-    url = HyperlinkedRelatedField(view_name='UserViewSet', read_only=True)
+class UserSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(
+        required=True,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+    username = serializers.CharField(
+        max_length=32,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+    password = serializers.CharField(min_length=8, write_only=True)
+
+    def create(self, validated_data):
+        user = User.objects.create_user(validated_data['username'], validated_data['email'],
+                                        validated_data['password'])
+        return user
 
     class Meta:
         model = User
-        fields = (
-            UserFields.URL, UserFields.EMAIL, UserFields.USER_NAME,
-            UserFields.FIRST_NAME, UserFields.LAST_NAME,
-            UserFields.PASSWORD
-        )
-        extra_kwargs = {UserFields.PASSWORD: {SerializerFields.WRITE_ONLY: True}, }
-
-    def create(self, validated_data):
-        password = validated_data.pop(UserFields.PASSWORD)
-        user = User(**validated_data)
-        # Hash passwords
-        user.set_password(password)
-        # Create new messages
-        user.save()
-        return user
-
-    def update(self, instance, validated_data):
-        instance.UserFields.EMAIL = validated_data.get(UserFields.EMAIL, instance.UserFields.EMAIL)
-        instance.save()
-        return instance
+        fields = ('id', 'username', 'email', 'password')

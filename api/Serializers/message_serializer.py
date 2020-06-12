@@ -1,8 +1,7 @@
+from api.Utils.Consts import MessageFields
 from api.models import Message
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
-
-from api.Utils.Consts import MessageFields
 
 
 class MessageSerializer(ModelSerializer):

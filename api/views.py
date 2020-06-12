@@ -1,15 +1,15 @@
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import status
+from rest_framework.authtoken.models import Token
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 from rest_framework.viewsets import ModelViewSet
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from .Serializers.message_serializer import MessageSerializer
 from .Serializers.user_serializer import UserSerializer
 from .Utils.Consts import MessageFields
-from .models import User, Message
-from .permissions import IsLoggedInUserOrAdmin, IsAdminUser
+from .models import Message
 
 
 class MessagesViewSet(ModelViewSet):
@@ -17,8 +17,8 @@ class MessagesViewSet(ModelViewSet):
     A simple ViewSet for viewing and editing the accounts
     associated with the user.
     """
+    authentication_classes = [JSONWebTokenAuthentication, ]
     serializer_class = MessageSerializer
-    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = [MessageFields.MARK_READ]
 
@@ -47,7 +47,7 @@ class MessagesViewSet(ModelViewSet):
         serialized_data = MessageSerializer(queryset, many=True)
         return Response(serialized_data.data, status=HTTP_200_OK)
 
-    @action(detail=True)
+    @action(detail=True, )
     def unread_messages(self, request, pk):
         """
         Return all of the user's unread messages.
@@ -57,18 +57,23 @@ class MessagesViewSet(ModelViewSet):
         return Response(serialized_data.data, status=HTTP_200_OK)
 
 
-class UserViewSet(ModelViewSet):
-    queryset = User.objects.filter()
-    serializer_class = UserSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
-    def get_permissions(self):
-        permission_classes = []
-        if self.action == 'create':
-            permission_classes = [AllowAny]
-        elif self.action == 'retrieve' or self.action == 'update' or self.action == 'partial_update':
-            permission_classes = [IsLoggedInUserOrAdmin]
-        elif self.action == 'list':
-            permission_classes = [IsAuthenticated]
-        elif self.action == 'destroy':
-            permission_classes = [IsAdminUser]
-        return [permission() for permission in permission_classes]
+
+class UserCreate(APIView):
+    """
+    Creates the user.
+    """
+
+    def post(self, request, format='json'):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            if user:
+                token = Token.objects.create(user=user)
+                json = serializer.data
+                json['token'] = token.key
+                return Response(json, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

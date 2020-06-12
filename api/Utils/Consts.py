@@ -5,6 +5,7 @@ class MessageFields:
     SENT_TO = 'sent_to'
     MARK_READ = 'mark_read'
     DATE = 'sent_at'
+    ID = 'id'
 
 
 class UserFields:
@@ -14,6 +15,8 @@ class UserFields:
     FIRST_NAME = 'first_name'
     LAST_NAME = 'last_name'
     USER_NAME = 'username'
+    IS_STAFF = 'is_staff'
+    IS_SUPERUSER = 'is_superuser'
 
 
 class SerializerFields:

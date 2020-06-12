@@ -1,78 +1,44 @@
 import os
 
 import django_heroku
+import dotenv
 
-from .Settings.Consts import POSTGRESQL_CONNECTION
+from .Settings.Consts import STATIC, EN, UTC
+from .Settings.apps.apps import DjangoApps
+from .Settings.apps.installed_apps import INSTALLED_APPS
+from .Settings.apps.middleware import MIDDLEWARE
+from .Settings.auth.password_validators import AUTH_PASSWORD_VALIDATORS
+from .Settings.auth.rest_framework_auth import RestFrameworkAuth, \
+    REST_DEFAULT_PERMISSIONS_CLASSES, REST_DEFAULT_AUTHENTICATION_CLASSES, JWT_AUTH
+from .Settings.database import POSTGRESQL_CONNECTION
+from .Settings.roots import AppRoots
+from .Settings.templates.templates_settings import TemplateSettings
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'y^dcuwt56fvz(7m4ex3a#=2d^hpwn69yz+!nn2wtjs9(p*+6=v'
+dotenv_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
 
-# SECURITY WARNING: don't run with debug turned on in production!
+SECRET_KEY = os.environ['SECRET_KEY']
+
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# Application definition
-
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',
-    'rest_framework.authtoken',
-    'django.contrib.sites',
-    'rest_auth',
-    'django_filters',
-    'allauth',
-    'allauth.account',
-    'rest_auth.registration',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.twitter',
-    'api',
-    'drf_yasg'
-]
+INSTALLED_APPS = INSTALLED_APPS.BASE_INSTALLED_APPS
 SITE_ID = 1
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = DjangoApps.EMAIL_BACKEND
 
-AUTH_USER_MODEL = 'api.User'
+AUTH_USER_MODEL = RestFrameworkAuth.AUTH_USER_MODEL
 
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_currentuser.middleware.ThreadLocalUserMiddleware',
+MIDDLEWARE = MIDDLEWARE.BASE_MIDDLEWARE
 
-]
+ROOT_URLCONF = AppRoots.URLS
 
-ROOT_URLCONF = 'messagesapi.urls'
+TEMPLATES = TemplateSettings.TEMPLATES
 
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
-
-WSGI_APPLICATION = 'messagesapi.wsgi.application'
+WSGI_APPLICATION = AppRoots.WSGI
 
 DATABASES = {
     'default': {
@@ -84,30 +50,11 @@ DATABASES = {
     }
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
+AUTH_PASSWORD_VALIDATORS = AUTH_PASSWORD_VALIDATORS
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+LANGUAGE_CODE = EN
 
-# Internationalization
-# https://docs.djangoproject.com/en/3.0/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
+TIME_ZONE = UTC
 
 USE_I18N = True
 
@@ -115,23 +62,14 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.0/howto/static-files/
-
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+STATIC_URL = f'/{STATIC}/'
+STATIC_ROOT = os.path.join(PROJECT_ROOT, STATIC)
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-    ),
+    RestFrameworkAuth.REST_DEFAULT_PERMISSIONS: REST_DEFAULT_PERMISSIONS_CLASSES,
+    RestFrameworkAuth.REST_DEFAULT_AUTHENTICATION: REST_DEFAULT_AUTHENTICATION_CLASSES,
 }
-
 REST_USE_JWT = True
+JWT_AUTH = JWT_AUTH
 django_heroku.settings(locals())

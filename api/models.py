@@ -2,14 +2,15 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
-from django_currentuser.db.models import CurrentUserField
 
-from .Utils.Consts import MessageFields, UserFields
+from .Utils.Consts import MessageFields
 from .Utils.validators import validate_message_content
 
 
 class Message(models.Model):
-    sender = CurrentUserField()
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL,
+                               on_delete=models.DO_NOTHING,
+                               )
 
     sent_to = models.ForeignKey(settings.AUTH_USER_MODEL,
                                 on_delete=models.DO_NOTHING,
@@ -28,11 +29,4 @@ class Message(models.Model):
 
 
 class User(AbstractUser):
-    username = models.CharField(max_length=120)
-    email = models.EmailField(unique=True)
-
-    USERNAME_FIELD = UserFields.EMAIL
-    REQUIRED_FIELDS = [UserFields.USER_NAME, UserFields.FIRST_NAME, UserFields.LAST_NAME]
-
-    def __str__(self):
-        return f"{self.username}"
+    pass
