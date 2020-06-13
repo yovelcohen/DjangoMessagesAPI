@@ -23,11 +23,11 @@ class UserViewSet(GenericViewSet):
 
     @swagger_auto_schema(operation_summary=DocsDescriptions.LIST_USERS)
     def list(self, request):
-        serializer = UserSerializer(self.queryset(), many=True)
+        serializer = UserSerializer(self.get_queryset(), many=True)
         return Response(serializer.data)
 
     @swagger_auto_schema(operation_summary=DocsDescriptions.RETRIEVE_USER)
     def retrieve(self, request, pk=None):
-        user = get_object_or_404(self.queryset(), pk=pk)
+        user = get_object_or_404(self.get_queryset(), pk=pk)
         serializer = UserSerializer(user)
         return Response(serializer.data)
