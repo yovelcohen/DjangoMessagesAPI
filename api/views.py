@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 from rest_framework.viewsets import ModelViewSet
 
-from .Serializers.message_serializer import MessageSerializer
+from .Serializers.MessageSerializers import MessageSerializer
 from .Utils.Consts import MessageFields, FILTERS
 from .models import Message
 
@@ -30,20 +30,39 @@ class MessagesViewSet(ModelViewSet):
         user = self.request.user
         return user
 
-    def perform_create(self, serializer):
-        serializer.save(sender=self.get_user())
-
     def get_queryset(self):
         return Message.objects.filter(sent_to=self.get_user())
+
+    def perform_create(self, serializer):
+        """
+        Set the sender to the logged in user.
+        """
+        serializer.save(sender=self.get_user())
+
+    def perform_update(self, serializer):
+        """
+        Update the message read field to true if necessary.
+        """
+        date = self.kwargs[MessageFields.DATE]
+        mark_read = self.kwargs[MessageFields.MARK_READ]
+        last_login = self.get_user().last_login
+        # If the message hasn't been read yet.
+        if not mark_read:
+            if last_login > date:
+                serializer.save(mark_read=True)
+            pass
+        pass
 
     @action(detail=True, )
     def unread_messages(self, request, pk):
         """
-        Return all of the user's unread messages.
+        Return all of the user's unread messages and it's count.
         """
-        data = self.filter_queryset(self.get_queryset().filter(mark_read=False))
+        queryset = self.get_queryset().filter(mark_read=False)
+        count = queryset.count()
+        data = self.filter_queryset(queryset)
         serialized_data = MessageSerializer(data, many=True)
-        return Response(serialized_data.data, status=HTTP_200_OK)
+        return Response((serialized_data.data, count), status=HTTP_200_OK)
 
     @action(detail=True)
     def sent_messages(self, request, pk):

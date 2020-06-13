@@ -4,7 +4,7 @@ from django.db import models
 from django.utils import timezone
 
 from .Utils.Consts import MessageFields
-from .Utils.validators import validate_message_content
+from .Utils.Validators import validate_message_content
 
 
 class Message(models.Model):
