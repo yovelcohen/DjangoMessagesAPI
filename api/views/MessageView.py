@@ -1,5 +1,7 @@
+from django.http import Http404
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -8,10 +10,10 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 from rest_framework.viewsets import ModelViewSet
 
+from ..models import Message
 from ..serializers.MessageSerializers import MessageSerializer
 from ..utils.Consts import MessageFields, FILTERS
 from ..utils.ViewsConsts import DocsDescriptions
-from ..models import Message
 
 
 class MessagesViewSet(ModelViewSet):
@@ -40,6 +42,14 @@ class MessagesViewSet(ModelViewSet):
         Set the sender to the logged in user.
         """
         serializer.save(sender=self.get_user())
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            self.perform_destroy(instance)
+        except Http404:
+            pass
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @swagger_auto_schema(method=DocsDescriptions.GET, operation_description=DocsDescriptions.UNREAD_MESSAGES,
                          operation_summary=DocsDescriptions.UNREAD_MESSAGES_DESCRIPTION)
