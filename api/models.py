@@ -3,8 +3,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
 
-from .Utils.Consts import MessageFields
-from .Utils.Validators import validate_message_content
+from .utils.Consts import MessageFields
+from .utils.Validators import validate_message_content
 
 
 class Message(models.Model):

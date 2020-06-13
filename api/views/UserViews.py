@@ -5,8 +5,8 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
-from ..Serializers.UserSerializers import UserSerializer
-from ..Utils.ViewsConsts import DocsDescriptions
+from ..serializers.UserSerializers import UserSerializer
+from ..utils.ViewsConsts import DocsDescriptions
 from ..models import User
 
 

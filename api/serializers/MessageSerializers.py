@@ -1,5 +1,5 @@
-from api.Utils.Consts import MessageFields
-from api.models import Message
+from ..utils.Consts import MessageFields
+from ..models import Message
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
