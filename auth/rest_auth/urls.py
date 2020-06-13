@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from django.urls import include, path
-from rest_auth.views import LoginView, LogoutView, UserDetailsView, PasswordChangeView
+from rest_auth.views import (LoginView, LogoutView, PasswordChangeView,
+                             UserDetailsView)
 
 urlpatterns = [
     path('api/sign-up/', include('rest_auth.registration.urls')),

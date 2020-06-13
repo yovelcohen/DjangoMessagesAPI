@@ -2,8 +2,8 @@ from django.conf.urls import url
 from django.urls import include
 from rest_framework.routers import DefaultRouter
 
-from .views.MessageView import MessagesViewSet
-from .views.UserViews import UserViewSet
+from .views.messages_views import MessagesViewSet
+from .views.user_views import UserViewSet
 
 messages_router = DefaultRouter()
 messages_router.register(r'messages', MessagesViewSet, basename='messages')

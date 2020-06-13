@@ -3,16 +3,17 @@ import os
 import django_heroku
 import dotenv
 
-from .config.Consts import STATIC, EN, UTC, SECRET_KEY, DATE_TIME_FORMAT, DATE_TIME_FORMAT_FIELD, DATE_INPUT_FIELDS
-from .config.DataBase import POSTGRESQL_CONNECTION
-from .config.Roots import AppRoots, ALLOWED_HOSTS
-from .config.apps.Apps import DjangoApps
-from .config.apps.InstalledApps import INSTALLED_APPS
-from .config.apps.Middleware import MIDDLEWARE
-from .config.auth.PasswordValidators import AUTH_PASSWORD_VALIDATORS
-from .config.auth.RestFrameworkAuth import RestFrameworkAuth, \
-    REST_DEFAULT_PERMISSIONS_CLASSES, REST_DEFAULT_AUTHENTICATION_CLASSES
-from .config.templates.TemplateSettings import TemplateSettings
+from .config.apps.apps import DjangoApps
+from .config.apps.installed_apps import INSTALLED_APPS
+from .config.apps.middleware import MIDDLEWARE
+from .config.auth.password_validators import AUTH_PASSWORD_VALIDATORS
+from .config.auth.rest_framework_auth import (
+    REST_DEFAULT_AUTHENTICATION_CLASSES, REST_DEFAULT_PERMISSIONS_CLASSES,
+    RestFrameworkAuth)
+from .config.consts import EN, SECRET_KEY, STATIC, UTC
+from .config.database import POSTGRESQL_CONNECTION
+from .config.roots import ALLOWED_HOSTS, AppRoots
+from .config.templates.templates_setting import TemplateSettings
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -73,4 +74,5 @@ REST_FRAMEWORK = {
     RestFrameworkAuth.REST_DEFAULT_PERMISSIONS: REST_DEFAULT_PERMISSIONS_CLASSES,
     RestFrameworkAuth.REST_DEFAULT_AUTHENTICATION: REST_DEFAULT_AUTHENTICATION_CLASSES,
 }
+
 django_heroku.settings(locals())

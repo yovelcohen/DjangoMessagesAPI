@@ -5,16 +5,16 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
-from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 from rest_framework.viewsets import ModelViewSet
 
 from ..models import Message
-from ..serializers.MessageSerializers import MessageSerializer
-from ..utils.Consts import MessageFields, FILTERS
-from ..utils.ViewsConsts import DocsDescriptions, METHODS
+from ..serializers.message_serializers import MessageSerializer
+from ..utils.consts import FILTERS, MessageFields
+from ..utils.views_consts import METHODS, DocsDescriptions
 
 
 @method_decorator(name=METHODS.LIST, decorator=swagger_auto_schema(

@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
 from ..models import Message
-from ..utils.Consts import MessageFields, DATE_TIME_FORMAT
+from ..utils.consts import DATE_TIME_FORMAT, MessageFields
 
 
 class MessageSerializer(ModelSerializer):

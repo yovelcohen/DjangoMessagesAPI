@@ -6,8 +6,8 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from ..models import User
-from ..serializers.UserSerializers import UserSerializer
-from ..utils.ViewsConsts import DocsDescriptions
+from ..serializers.user_serializers import UserSerializer
+from ..utils.views_consts import DocsDescriptions
 
 
 class UserViewSet(GenericViewSet):
