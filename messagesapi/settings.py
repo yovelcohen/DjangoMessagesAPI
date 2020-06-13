@@ -3,17 +3,17 @@ import os
 import django_heroku
 import environ
 
-from .settings.Consts import STATIC, EN, UTC, SECRET_KEY
-from .settings.DataBase import POSTGRESQL_CONNECTION
-from .settings.Roots import AppRoots, ALLOWED_HOSTS
-from .settings.apps.Apps import DjangoApps
-from .settings.apps.InstalledApps import INSTALLED_APPS
-from .settings.apps.Middleware import MIDDLEWARE
-from .settings.auth.PasswordValidators import AUTH_PASSWORD_VALIDATORS
-from .settings.auth.RestFrameworkAuth import RestFrameworkAuth, \
+from .config.Consts import STATIC, EN, UTC, SECRET_KEY
+from .config.DataBase import POSTGRESQL_CONNECTION
+from .config.Roots import AppRoots, ALLOWED_HOSTS
+from .config.apps.Apps import DjangoApps
+from .config.apps.InstalledApps import INSTALLED_APPS
+from .config.apps.Middleware import MIDDLEWARE
+from .config.auth.PasswordValidators import AUTH_PASSWORD_VALIDATORS
+from .config.auth.RestFrameworkAuth import RestFrameworkAuth, \
     REST_DEFAULT_PERMISSIONS_CLASSES, REST_DEFAULT_AUTHENTICATION_CLASSES
-from .settings.logging.Logging import LOGGING
-from .settings.templates.TemplateSettings import TemplateSettings
+from .config.logging.Logging import LOGGING
+from .config.templates.TemplateSettings import TemplateSettings
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
