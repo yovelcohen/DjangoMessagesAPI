@@ -8,7 +8,7 @@ from .views.user_views import UserViewSet
 messages_router = DefaultRouter()
 messages_router.register(r'messages', MessagesViewSet, basename='messages')
 user_router = DefaultRouter()
-user_router.register(r'users', UserViewSet, basename='user')
+user_router.register(r'users', UserViewSet, basename='users')
 
 urlpatterns = [
     url('', include(messages_router.urls)),
