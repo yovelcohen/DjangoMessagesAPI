@@ -4,5 +4,5 @@ EN = 'en-us'
 UTC = 'UTC'
 
 SECRET_KEY = 'SECRET_KEY'
-DATE_TIME_FORMAT = '%m/%d/%Y %H:%M'
+DATE_TIME_FORMAT = "%a, %d %b %Y %H:%M"
 DATETIME_FORMAT = 'DATETIME_FORMAT'
