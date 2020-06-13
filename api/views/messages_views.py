@@ -85,7 +85,7 @@ class MessagesViewSet(ModelViewSet):
         serialized_data = MessageSerializer(queryset, many=True)
         return Response(serialized_data.data, status=HTTP_200_OK)
 
-    @action(detail=False, methods=[METHODS.PUT, METHODS.PATCH, METHODS.DELETE, METHODS.DELETE])
+    @action(detail=False, methods=[METHODS.GET, METHODS.PUT, METHODS.PATCH, METHODS.DELETE, METHODS.DELETE])
     def newest_msg(self, request):
         """
         Return the latest message the user received.
