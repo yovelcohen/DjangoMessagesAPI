@@ -30,18 +30,18 @@ class MessagesViewSet(ModelViewSet):
         user = self.request.user
         return user
 
-    def get_queryset(self):
-        return Message.objects.filter(sent_to=self.get_user())
-
     def perform_create(self, serializer):
         serializer.save(sender=self.get_user())
+
+    def get_queryset(self):
+        return Message.objects.filter(sent_to=self.get_user())
 
     @action(detail=True, )
     def unread_messages(self, request, pk):
         """
         Return all of the user's unread messages.
         """
-        data = self.filter_queryset(self.get_queryset())
+        data = self.filter_queryset(self.get_queryset().filter(mark_read=False))
         serialized_data = MessageSerializer(data, many=True)
         return Response(serialized_data.data, status=HTTP_200_OK)
 
