@@ -15,7 +15,7 @@ class DocsDescriptions:
 
 
 class METHODS:
-    DELETE = 'delete'
+    DESTROY = 'destroy'
     LIST = 'list'
     UPDATE = 'update'
     GET = 'get'
