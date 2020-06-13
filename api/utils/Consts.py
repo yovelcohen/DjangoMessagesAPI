@@ -31,3 +31,6 @@ class FILTERS:
     SEARCH_FIELDS = [MessageFields.SENDER, MessageFields.DATE, MessageFields.SUBJECT]
     ORDERING_FIELDS = [MessageFields.DATE, MessageFields.SENDER]
     FILTER_SET = [MessageFields.MARK_READ, MessageFields.SENDER, MessageFields.SENT_TO]
+
+
+DATE_TIME_FORMAT = "%a, %d %b %Y %H:%M"
