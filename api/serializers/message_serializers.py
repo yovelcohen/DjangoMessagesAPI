@@ -8,7 +8,7 @@ from ..utils.consts import DATE_TIME_FORMAT, MessageFields
 
 class MessageSerializer(ModelSerializer):
     mark_read = serializers.BooleanField(default=False)
-    sent_at = serializers.DateTimeField(format=DATE_TIME_FORMAT, default=timezone.now)
+    sent_at = serializers.DateTimeField(format=DATE_TIME_FORMAT, default=timezone.now, read_only=True)
 
     class Meta:
         model = Message

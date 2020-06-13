@@ -103,5 +103,7 @@ class MessagesViewSet(ModelViewSet):
         Return the latest message the user received.
         """
         data = self.get_queryset().order_by(f'-{MessageFields.ID}')[0]
+        data.mark_read = True
+        data.save(update_fields=[MessageFields.MARK_READ])
         serialized_data = MessageSerializer(data, many=False)
         return Response(serialized_data.data, status=HTTP_200_OK)
