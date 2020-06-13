@@ -41,6 +41,7 @@ TEMPLATES = TemplateSettings.TEMPLATES
 WSGI_APPLICATION = AppRoots.WSGI
 
 DATABASES = {
+    # Local DB
     'default': {
         'ENGINE': POSTGRESQL_CONNECTION['engine'],
         'NAME': POSTGRESQL_CONNECTION['database'],
