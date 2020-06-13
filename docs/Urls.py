@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .schema import schema_view
+from .Schema import schema_view
 
 urlpatterns = [
     # Return a swagger docs in a json format.

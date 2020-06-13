@@ -1,7 +1,7 @@
 from django.urls import path
 
-from .facebook_login import FacebookLogin
-from .twitter_login import TwitterLogin
+from .FacebookLogin import FacebookLogin
+from .TwitterLogin import TwitterLogin
 
 urlpatterns = [
     path('facebook', FacebookLogin.as_view(), name='fb_login'),
