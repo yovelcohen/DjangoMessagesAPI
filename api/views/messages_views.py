@@ -101,7 +101,7 @@ class MessagesViewSet(ModelViewSet):
             return Response(message, status=HTTP_200_OK)
         elif self.action == METHODS.DESTROY:
             message.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
     @swagger_auto_schema(method=METHODS.GET, operation_description=DocsDescriptions.LAST_50_MESSAGES,
                          operation_summary=DocsDescriptions.LAST_50_MESSAGES_DESCRIPTION)
