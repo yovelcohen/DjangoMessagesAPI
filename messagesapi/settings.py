@@ -3,7 +3,7 @@ import os
 import django_heroku
 import dotenv
 
-from .config.Consts import STATIC, EN, UTC, SECRET_KEY, DATE_TIME_FORMAT
+from .config.Consts import STATIC, EN, UTC, SECRET_KEY, DATE_TIME_FORMAT, DATETIME_FORMAT
 from .config.DataBase import POSTGRESQL_CONNECTION
 from .config.Roots import AppRoots, ALLOWED_HOSTS
 from .config.apps.Apps import DjangoApps
@@ -72,6 +72,6 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, STATIC)
 REST_FRAMEWORK = {
     RestFrameworkAuth.REST_DEFAULT_PERMISSIONS: REST_DEFAULT_PERMISSIONS_CLASSES,
     RestFrameworkAuth.REST_DEFAULT_AUTHENTICATION: REST_DEFAULT_AUTHENTICATION_CLASSES,
-    'DATE_INPUT_FORMATS': [DATE_TIME_FORMAT, ]
+    DATETIME_FORMAT: [DATE_TIME_FORMAT, ]
 }
 django_heroku.settings(locals())
