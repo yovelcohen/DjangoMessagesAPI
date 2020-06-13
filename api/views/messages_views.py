@@ -90,6 +90,13 @@ class MessagesViewSet(ModelViewSet):
         """
         Return the latest message the user received.
         """
+        message = self.get_object()
+        if self.action == METHODS.PUT or METHODS.PATCH:
+            message.save()
+            return Response(message, status=HTTP_200_OK)
+        elif self.action == METHODS.DESTROY:
+            message.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
         data = self.get_queryset().order_by(f'-{MessageFields.ID}')[0]
         serialized_data = MessageSerializer(data, many=False)
         return Response(serialized_data.data, status=HTTP_200_OK)
