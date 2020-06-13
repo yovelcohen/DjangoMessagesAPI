@@ -8,10 +8,10 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 from rest_framework.viewsets import ModelViewSet
 
-from .Serializers.MessageSerializers import MessageSerializer
-from .Utils.Consts import MessageFields, FILTERS
-from .Utils.ViewsConsts import DocsDescriptions
-from .models import Message
+from messagesapi.api.Serializers.MessageSerializers import MessageSerializer
+from messagesapi.api.Utils.Consts import MessageFields, FILTERS
+from messagesapi.api.Utils.ViewsConsts import DocsDescriptions
+from messagesapi.api.models import Message
 
 
 class MessagesViewSet(ModelViewSet):
