@@ -30,4 +30,4 @@ class SerializerFields:
 class FILTERS:
     SEARCH_FIELDS = [MessageFields.SENDER, MessageFields.DATE, f'${MessageFields.SUBJECT}']
     ORDERING_FIELDS = [MessageFields.DATE, MessageFields.SENDER]
-    FILTER_SET = [MessageFields.MARK_READ, MessageFields.SENDER]
+    FILTER_SET = [MessageFields.MARK_READ, MessageFields.SENDER, MessageFields.SENT_TO]
