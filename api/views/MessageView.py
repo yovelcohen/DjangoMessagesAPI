@@ -1,4 +1,5 @@
 from django.http import Http404
+from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
@@ -13,9 +14,18 @@ from rest_framework.viewsets import ModelViewSet
 from ..models import Message
 from ..serializers.MessageSerializers import MessageSerializer
 from ..utils.Consts import MessageFields, FILTERS
-from ..utils.ViewsConsts import DocsDescriptions
+from ..utils.ViewsConsts import DocsDescriptions, METHODS
 
 
+@method_decorator(name=METHODS.LIST, decorator=swagger_auto_schema(
+    operation_summary=DocsDescriptions.LIST_MESSAGES
+))
+@method_decorator(name=METHODS.UPDATE, decorator=swagger_auto_schema(
+    operation_summary=DocsDescriptions.UPDATE_MESSAGE
+))
+@method_decorator(name=METHODS.DELETE, decorator=swagger_auto_schema(
+    operation_summary=DocsDescriptions.DELETE_MESSAGE
+))
 class MessagesViewSet(ModelViewSet):
     """
     A simple ViewSet for viewing and editing the messages
@@ -51,7 +61,7 @@ class MessagesViewSet(ModelViewSet):
             pass
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @swagger_auto_schema(method=DocsDescriptions.GET, operation_description=DocsDescriptions.UNREAD_MESSAGES,
+    @swagger_auto_schema(method=METHODS.GET, operation_description=DocsDescriptions.UNREAD_MESSAGES,
                          operation_summary=DocsDescriptions.UNREAD_MESSAGES_DESCRIPTION)
     @action(detail=True, )
     def unread_messages(self, request, pk):
