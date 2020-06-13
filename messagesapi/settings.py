@@ -3,7 +3,7 @@ import os
 import django_heroku
 import dotenv
 
-from .config.Consts import STATIC, EN, UTC, SECRET_KEY, DATE_TIME_FORMAT, DATETIME_FORMAT
+from .config.Consts import STATIC, EN, UTC, SECRET_KEY, DATE_TIME_FORMAT, DATE_TIME_FORMAT_FIELD, DATE_INPUT_FIELDS
 from .config.DataBase import POSTGRESQL_CONNECTION
 from .config.Roots import AppRoots, ALLOWED_HOSTS
 from .config.apps.Apps import DjangoApps
@@ -70,8 +70,9 @@ STATIC_URL = f'/{STATIC}/'
 STATIC_ROOT = os.path.join(PROJECT_ROOT, STATIC)
 
 REST_FRAMEWORK = {
+    DATE_INPUT_FIELDS: [DATE_TIME_FORMAT, ],
+    DATE_TIME_FORMAT_FIELD: [DATE_TIME_FORMAT, ],
     RestFrameworkAuth.REST_DEFAULT_PERMISSIONS: REST_DEFAULT_PERMISSIONS_CLASSES,
     RestFrameworkAuth.REST_DEFAULT_AUTHENTICATION: REST_DEFAULT_AUTHENTICATION_CLASSES,
-    DATETIME_FORMAT: [DATE_TIME_FORMAT, ]
 }
 django_heroku.settings(locals())

@@ -6,7 +6,7 @@ from rest_framework.serializers import ModelSerializer
 
 class MessageSerializer(ModelSerializer):
     mark_read = serializers.BooleanField(default=False)
-
+    sent_at = serializers.DateTimeField()
     class Meta:
         model = Message
         fields = (MessageFields.ID, MessageFields.SENDER, MessageFields.SUBJECT,
