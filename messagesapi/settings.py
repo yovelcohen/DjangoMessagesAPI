@@ -1,7 +1,7 @@
 import os
 
 import django_heroku
-import environ
+import dotenv
 
 from .config.Consts import STATIC, EN, UTC, SECRET_KEY
 from .config.DataBase import POSTGRESQL_CONNECTION
@@ -17,7 +17,9 @@ from .config.templates.TemplateSettings import TemplateSettings
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-environ.Env.read_env()
+dotenv_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
 
 SECRET_KEY = os.environ[SECRET_KEY]
 
