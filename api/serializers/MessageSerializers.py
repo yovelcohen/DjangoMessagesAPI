@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
@@ -7,7 +8,7 @@ from ..utils.Consts import MessageFields, DATE_TIME_FORMAT
 
 class MessageSerializer(ModelSerializer):
     mark_read = serializers.BooleanField(default=False)
-    sent_at = serializers.DateTimeField(format=DATE_TIME_FORMAT)
+    sent_at = serializers.DateTimeField(format=DATE_TIME_FORMAT, default=timezone.now)
 
     class Meta:
         model = Message
