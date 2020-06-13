@@ -3,7 +3,7 @@ import os
 import django_heroku
 import dotenv
 
-from .config.Consts import STATIC, EN, UTC, SECRET_KEY
+from .config.Consts import STATIC, EN, UTC, SECRET_KEY, DATE_TIME_FORMAT, DATE_TIME_FORMAT_FIELD, DATE_INPUT_FIELDS
 from .config.DataBase import POSTGRESQL_CONNECTION
 from .config.Roots import AppRoots, ALLOWED_HOSTS
 from .config.apps.Apps import DjangoApps
@@ -61,14 +61,13 @@ TIME_ZONE = UTC
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
 USE_TZ = True
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_URL = f'/{STATIC}/'
 STATIC_ROOT = os.path.join(PROJECT_ROOT, STATIC)
-
 
 REST_FRAMEWORK = {
     RestFrameworkAuth.REST_DEFAULT_PERMISSIONS: REST_DEFAULT_PERMISSIONS_CLASSES,

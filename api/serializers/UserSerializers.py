@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
-from ..Utils.Consts import UserFields
+from ..utils.Consts import UserFields
 from ..models import User
 
 
