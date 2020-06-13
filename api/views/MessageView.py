@@ -23,7 +23,7 @@ from ..utils.ViewsConsts import DocsDescriptions, METHODS
 @method_decorator(name=METHODS.UPDATE, decorator=swagger_auto_schema(
     operation_summary=DocsDescriptions.UPDATE_MESSAGE
 ))
-@method_decorator(name=METHODS.DELETE, decorator=swagger_auto_schema(
+@method_decorator(name=METHODS.DESTROY, decorator=swagger_auto_schema(
     operation_summary=DocsDescriptions.DELETE_MESSAGE
 ))
 class MessagesViewSet(ModelViewSet):
