@@ -12,5 +12,3 @@ class MIDDLEWARE:
     ]
     TEST_MIDDLEWARE = None
     PRODUCTION_MIDDLEWARE = None
-
-
