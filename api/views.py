@@ -1,4 +1,5 @@
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -9,6 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from .Serializers.MessageSerializers import MessageSerializer
 from .Utils.Consts import MessageFields, FILTERS
+from .Utils.ViewsConsts import DocsDescriptions
 from .models import Message
 
 
@@ -39,20 +41,7 @@ class MessagesViewSet(ModelViewSet):
         """
         serializer.save(sender=self.get_user())
 
-    def perform_update(self, serializer):
-        """
-        Update the message read field to true if necessary.
-        """
-        date = self.kwargs[MessageFields.DATE]
-        mark_read = self.kwargs[MessageFields.MARK_READ]
-        last_login = self.get_user().last_login
-        # If the message hasn't been read yet.
-        if not mark_read:
-            if last_login > date:
-                serializer.save(mark_read=True)
-            pass
-        pass
-
+    @swagger_auto_schema(method=DocsDescriptions.GET, operation_description=DocsDescriptions.UNREAD_MESSAGES)
     @action(detail=True, )
     def unread_messages(self, request, pk):
         """
@@ -64,6 +53,7 @@ class MessagesViewSet(ModelViewSet):
         serialized_data = MessageSerializer(data, many=True)
         return Response((serialized_data.data, count), status=HTTP_200_OK)
 
+    @swagger_auto_schema(method=DocsDescriptions.GET, operation_description=DocsDescriptions.SENT_MESSAGES)
     @action(detail=True)
     def sent_messages(self, request, pk):
         """
@@ -73,6 +63,7 @@ class MessagesViewSet(ModelViewSet):
         serialized_data = MessageSerializer(queryset, many=True)
         return Response(serialized_data.data, status=HTTP_200_OK)
 
+    @swagger_auto_schema(method=DocsDescriptions.GET, operation_description=DocsDescriptions.LAST_50_MESSAGES)
     @action(detail=True)
     def last_50_messages(self, request, pk):
         """
@@ -81,6 +72,7 @@ class MessagesViewSet(ModelViewSet):
         serialized_data = MessageSerializer(self.get_queryset(), many=True)
         return Response(serialized_data.data, status=HTTP_200_OK)
 
+    @swagger_auto_schema(method=DocsDescriptions.GET, operation_description=DocsDescriptions.NEWEST_MESSAGE)
     @action(detail=False)
     def newest_msg(self, request):
         """
