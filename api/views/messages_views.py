@@ -85,24 +85,6 @@ class MessagesViewSet(ModelViewSet):
         serialized_data = MessageSerializer(queryset, many=True)
         return Response(serialized_data.data, status=HTTP_200_OK)
 
-    @action(detail=False, methods=[METHODS.GET, METHODS.PUT, METHODS.PATCH, METHODS.DELETE, METHODS.DELETE])
-    def newest_msg(self, request):
-        """
-        Return the latest message the user received.
-        """
-        data = self.get_queryset().order_by(f'-{MessageFields.ID}')[0]
-        serialized_data = MessageSerializer(data, many=False)
-        message = self.get_object()
-
-        if self.request.method == METHODS.GET.upper():
-            return Response(serialized_data.data, status=HTTP_200_OK)
-        elif self.action == METHODS.PUT or METHODS.PATCH:
-            message.save()
-            return Response(message, status=HTTP_200_OK)
-        elif self.action == METHODS.DESTROY:
-            message.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
     @swagger_auto_schema(method=METHODS.GET, operation_description=DocsDescriptions.LAST_50_MESSAGES,
                          operation_summary=DocsDescriptions.LAST_50_MESSAGES_DESCRIPTION)
     @action(detail=True)
@@ -111,4 +93,15 @@ class MessagesViewSet(ModelViewSet):
         Return the user's 50 last messages
         """
         serialized_data = MessageSerializer(self.get_queryset(), many=True)
+        return Response(serialized_data.data, status=HTTP_200_OK)
+
+    @swagger_auto_schema(method=METHODS.GET, operation_description=DocsDescriptions.NEWEST_MESSAGE,
+                         operation_summary=DocsDescriptions.NEWEST_MESSAGE_DESCRIPTION)
+    @action(detail=False)
+    def newest_msg(self, request):
+        """
+        Return the latest message the user received.
+        """
+        data = self.get_queryset().order_by(f'-{MessageFields.ID}')[0]
+        serialized_data = MessageSerializer(data, many=False)
         return Response(serialized_data.data, status=HTTP_200_OK)
