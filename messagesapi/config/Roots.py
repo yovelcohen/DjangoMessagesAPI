@@ -3,4 +3,4 @@ class AppRoots:
     WSGI = 'messagesapi.wsgi.application'
 
 
-ALLOWED_HOSTS = ['localhost', '.herokuapp.com']
+ALLOWED_HOSTS = ['http://127.0.0.1:8000/', 'https://djangomessagesapi.herokuapp.com/']

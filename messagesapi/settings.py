@@ -12,7 +12,6 @@ from .config.apps.Middleware import MIDDLEWARE
 from .config.auth.PasswordValidators import AUTH_PASSWORD_VALIDATORS
 from .config.auth.RestFrameworkAuth import RestFrameworkAuth, \
     REST_DEFAULT_PERMISSIONS_CLASSES, REST_DEFAULT_AUTHENTICATION_CLASSES
-from .config.logging.Logging import LOGGING
 from .config.templates.TemplateSettings import TemplateSettings
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -69,10 +68,10 @@ USE_TZ = True
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_URL = f'/{STATIC}/'
 STATIC_ROOT = os.path.join(PROJECT_ROOT, STATIC)
-CONN_MAX_AGE = 10
+
+
 REST_FRAMEWORK = {
     RestFrameworkAuth.REST_DEFAULT_PERMISSIONS: REST_DEFAULT_PERMISSIONS_CLASSES,
     RestFrameworkAuth.REST_DEFAULT_AUTHENTICATION: REST_DEFAULT_AUTHENTICATION_CLASSES,
 }
-LOGGING = LOGGING
 django_heroku.settings(locals())
