@@ -85,9 +85,6 @@ class MessagesViewSet(ModelViewSet):
         serialized_data = MessageSerializer(queryset, many=True)
         return Response(serialized_data.data, status=HTTP_200_OK)
 
-    @swagger_auto_schema(operation_description=DocsDescriptions.NEWEST_MESSAGE,
-                         operation_summary=DocsDescriptions.NEWEST_MESSAGE_DESCRIPTION
-                         )
     @action(detail=False, methods=[METHODS.PUT, METHODS.PATCH, METHODS.DELETE, METHODS.DELETE])
     def newest_msg(self, request):
         """
