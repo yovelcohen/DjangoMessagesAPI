@@ -99,7 +99,7 @@ class MessagesViewSet(ModelViewSet):
                          operation_description=DocsDescriptions.NEWEST_MESSAGE,
                          operation_summary=DocsDescriptions.NEWEST_MESSAGE_DESCRIPTION
                          )
-    @action(detail=False, methods=[METHODS.GET, METHODS.PUT, METHODS.PATCH, METHODS.DELETE, METHODS.DELETE])
+    @action(detail=False, methods=[METHODS.PUT, METHODS.PATCH, METHODS.DELETE, METHODS.DELETE])
     def newest_msg(self, request):
         """
         Return the latest message the user received.
