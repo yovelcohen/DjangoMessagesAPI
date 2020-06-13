@@ -21,10 +21,10 @@ from ..utils.views_consts import METHODS, DocsDescriptions
     operation_summary=DocsDescriptions.LIST_MESSAGES
 ))
 @method_decorator(name=METHODS.UPDATE, decorator=swagger_auto_schema(
-    operation_summary=DocsDescriptions.UPDATE_MESSAGE
+    operation_summary=DocsDescriptions.UPDATE_MSG
 ))
 @method_decorator(name=METHODS.DESTROY, decorator=swagger_auto_schema(
-    operation_summary=DocsDescriptions.DELETE_MESSAGE
+    operation_summary=DocsDescriptions.DELETE_MSG
 ))
 class MessagesViewSet(ModelViewSet):
     """
@@ -53,6 +53,23 @@ class MessagesViewSet(ModelViewSet):
         """
         serializer.save(sender=self.get_user())
 
+    @swagger_auto_schema(operation_summary=DocsDescriptions.RETRIEVE_MSG_URL,
+                         operation_description=DocsDescriptions.RETRIEVE_MSG)
+    def retrieve(self, request, *args, **kwargs):
+        """
+        Changes the mark_read field to true before returning the object.
+        """
+        instance = self.get_object()
+        sent_to = instance.sent_to
+        user = self.get_user()
+        if sent_to == user:
+            instance.mark_read = True
+            instance.save()
+            serialized = self.get_serializer(instance)
+            return Response(serialized.data)
+        serialized = self.get_serializer(instance)
+        return Response(serialized.data)
+
     def destroy(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
@@ -61,7 +78,8 @@ class MessagesViewSet(ModelViewSet):
             pass
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @swagger_auto_schema(method=METHODS.GET, operation_description=DocsDescriptions.UNREAD_MESSAGES,
+    @swagger_auto_schema(method=METHODS.GET,
+                         operation_description=DocsDescriptions.UNREAD_MESSAGES,
                          operation_summary=DocsDescriptions.UNREAD_MESSAGES_DESCRIPTION)
     @action(detail=True, )
     def unread_messages(self, request, pk):
@@ -85,7 +103,8 @@ class MessagesViewSet(ModelViewSet):
         serialized_data = MessageSerializer(queryset, many=True)
         return Response(serialized_data.data, status=HTTP_200_OK)
 
-    @swagger_auto_schema(method=METHODS.GET, operation_description=DocsDescriptions.LAST_50_MESSAGES,
+    @swagger_auto_schema(method=METHODS.GET,
+                         operation_description=DocsDescriptions.LAST_50_MESSAGES,
                          operation_summary=DocsDescriptions.LAST_50_MESSAGES_DESCRIPTION)
     @action(detail=True)
     def last_50_messages(self, request, pk):
@@ -95,8 +114,9 @@ class MessagesViewSet(ModelViewSet):
         serialized_data = MessageSerializer(self.get_queryset(), many=True)
         return Response(serialized_data.data, status=HTTP_200_OK)
 
-    @swagger_auto_schema(method=METHODS.GET, operation_description=DocsDescriptions.NEWEST_MESSAGE,
-                         operation_summary=DocsDescriptions.NEWEST_MESSAGE_DESCRIPTION)
+    @swagger_auto_schema(method=METHODS.GET,
+                         operation_description=DocsDescriptions.NEWEST_MSG,
+                         operation_summary=DocsDescriptions.NEWEST_MSG_DESCRIPTION)
     @action(detail=False)
     def newest_msg(self, request):
         """
