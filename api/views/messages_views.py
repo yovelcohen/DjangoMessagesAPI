@@ -90,16 +90,18 @@ class MessagesViewSet(ModelViewSet):
         """
         Return the latest message the user received.
         """
+        data = self.get_queryset().order_by(f'-{MessageFields.ID}')[0]
+        serialized_data = MessageSerializer(data, many=False)
         message = self.get_object()
-        if self.action == METHODS.PUT or METHODS.PATCH:
+
+        if self.request.method == METHODS.GET.upper():
+            return Response(serialized_data.data, status=HTTP_200_OK)
+        elif self.action == METHODS.PUT or METHODS.PATCH:
             message.save()
             return Response(message, status=HTTP_200_OK)
         elif self.action == METHODS.DESTROY:
             message.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        data = self.get_queryset().order_by(f'-{MessageFields.ID}')[0]
-        serialized_data = MessageSerializer(data, many=False)
-        return Response(serialized_data.data, status=HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @swagger_auto_schema(method=METHODS.GET, operation_description=DocsDescriptions.LAST_50_MESSAGES,
                          operation_summary=DocsDescriptions.LAST_50_MESSAGES_DESCRIPTION)
