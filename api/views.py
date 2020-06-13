@@ -41,7 +41,8 @@ class MessagesViewSet(ModelViewSet):
         """
         serializer.save(sender=self.get_user())
 
-    @swagger_auto_schema(method=DocsDescriptions.GET, operation_description=DocsDescriptions.UNREAD_MESSAGES)
+    @swagger_auto_schema(method=DocsDescriptions.GET, operation_description=DocsDescriptions.UNREAD_MESSAGES,
+                         operation_summary=DocsDescriptions.UNREAD_MESSAGES_DESCRIPTION)
     @action(detail=True, )
     def unread_messages(self, request, pk):
         """
@@ -53,7 +54,8 @@ class MessagesViewSet(ModelViewSet):
         serialized_data = MessageSerializer(data, many=True)
         return Response((serialized_data.data, count), status=HTTP_200_OK)
 
-    @swagger_auto_schema(method=DocsDescriptions.GET, operation_description=DocsDescriptions.SENT_MESSAGES)
+    @swagger_auto_schema(method=DocsDescriptions.GET, operation_description=DocsDescriptions.SENT_MESSAGES,
+                         operation_summary=DocsDescriptions.SENT_MESSAGES_DESCRIPTION)
     @action(detail=True)
     def sent_messages(self, request, pk):
         """
@@ -63,7 +65,8 @@ class MessagesViewSet(ModelViewSet):
         serialized_data = MessageSerializer(queryset, many=True)
         return Response(serialized_data.data, status=HTTP_200_OK)
 
-    @swagger_auto_schema(method=DocsDescriptions.GET, operation_description=DocsDescriptions.LAST_50_MESSAGES)
+    @swagger_auto_schema(method=DocsDescriptions.GET, operation_description=DocsDescriptions.LAST_50_MESSAGES,
+                         operation_summary=DocsDescriptions.LAST_50_MESSAGES_DESCRIPTION)
     @action(detail=True)
     def last_50_messages(self, request, pk):
         """
@@ -72,7 +75,8 @@ class MessagesViewSet(ModelViewSet):
         serialized_data = MessageSerializer(self.get_queryset(), many=True)
         return Response(serialized_data.data, status=HTTP_200_OK)
 
-    @swagger_auto_schema(method=DocsDescriptions.GET, operation_description=DocsDescriptions.NEWEST_MESSAGE)
+    @swagger_auto_schema(method=DocsDescriptions.GET, operation_description=DocsDescriptions.NEWEST_MESSAGE,
+                         operation_summary=DocsDescriptions.NEWEST_MESSAGE_DESCRIPTION)
     @action(detail=False)
     def newest_msg(self, request):
         """
