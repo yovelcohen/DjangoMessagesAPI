@@ -45,3 +45,4 @@ swagger-spec-validator==2.7.1
 uritemplate==3.0.1
 urllib3==1.25.9
 whitenoise==5.1.0
+environ
